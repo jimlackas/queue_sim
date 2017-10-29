@@ -12,6 +12,5 @@ fn main() {
     let queue = Queue::new();
     let mut schedule = Schedule::<Queue>::new(queue);
     schedule.schedule_event(ScheduledEvent::new(Event::Arrival, 0.0));
-//    schedule.schedule_event(ScheduledEvent::new(Event::Stop, 10.0));
     schedule.run();
 }

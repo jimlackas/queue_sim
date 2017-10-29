@@ -41,11 +41,7 @@ impl Stats {
     }
 
     pub fn get_avg_length(&self) -> f64 {
-        if self.total_sim_time <= 0.0 {
-            0.0
-        } else {
-            self.total_queue_time / self.total_sim_time
-        }
+        safe_division(self.total_queue_time, self.total_sim_time)
     }
 
     pub fn get_perc_time_queue_length(&self, n: u32) -> f64 {
@@ -73,10 +69,14 @@ impl Stats {
     }
 
     pub fn get_server_utilization(&self) -> f64 {
-        if self.total_sim_time <= 0.0 {
-            0.0
-        } else {
-            self.total_busy_time / self.total_sim_time
-        }
+        safe_division(self.total_busy_time, self.total_sim_time)
+    }
+}
+
+fn safe_division(n: f64, d: f64) -> f64 {
+    if d <= 0.0 {
+        0.0
+    } else {
+        n / d
     }
 }

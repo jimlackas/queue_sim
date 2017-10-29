@@ -7,8 +7,11 @@ use self::statistics::*;
 use self::time_gen::*;
 
 const INTER_ARRIVAL_RATE: f64 = 1.0 / 0.9;
-const INTER_ARRIVAL_INPUT_FILE: &str = "Data1.txt";
 const SERVICE_RATE: f64 = 1.0 / 0.7;
+
+#[allow(dead_code)]
+const INTER_ARRIVAL_INPUT_FILE: &str = "Data1.txt";
+#[allow(dead_code)]
 const SERVICE_INPUT_FILE: &str = "Data2.txt";
 
 pub struct Queue {
@@ -20,6 +23,7 @@ pub struct Queue {
 }
 
 impl Queue {
+    #[allow(dead_code)]
     pub fn new() -> Queue {
         Queue {
             length: 0,
@@ -30,12 +34,21 @@ impl Queue {
             service_times: Generator::new(
                 SERVICE_RATE,
                 GeneratorInput::File(SERVICE_INPUT_FILE)),
-//            arrival_times: Generator::new(
-//                INTER_ARRIVAL_RATE,
-//                GeneratorInput::Generated(20000)),
-//            service_times: Generator::new(
-//                SERVICE_RATE,
-//                GeneratorInput::Generated(20000)),
+            stats: Stats::new(),
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn new_with_event_count(count: usize) -> Queue {
+        Queue {
+            length: 0,
+            busy: false,
+            arrival_times: Generator::new(
+                INTER_ARRIVAL_RATE,
+                GeneratorInput::List(count)),
+            service_times: Generator::new(
+                SERVICE_RATE,
+                GeneratorInput::List(count)),
             stats: Stats::new(),
         }
     }

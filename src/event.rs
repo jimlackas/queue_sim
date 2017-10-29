@@ -1,5 +1,6 @@
 
 #[derive(Copy, Clone)]
+#[allow(dead_code)]
 pub enum Event {
     Arrival,
     Departure,

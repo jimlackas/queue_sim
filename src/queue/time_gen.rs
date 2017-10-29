@@ -3,10 +3,12 @@ extern crate rand;
 use rand::Rng;
 use std::fs::File;
 use std::io::Read;
+use std::error::Error;
 
+#[allow(dead_code)]
 pub enum GeneratorInput<'a> {
     File(&'a str),
-    Generated(usize),
+    List(usize),
 }
 
 pub struct Generator {
@@ -18,37 +20,22 @@ impl Generator {
         let mut time_values = Vec::new();
         match input {
             GeneratorInput::File(filename) => {
-                if let Ok(mut input_file) = File::open(filename) {
-
-                    let mut contents = String::new();
-                    match input_file.read_to_string(&mut contents) {
-                        Ok(_) => {
-                            time_values =
-                                contents.lines()
-                                    .map(|u| {
-                                        match u.parse::<f64>() {
-                                            Ok(u) => -((1.0 - u).ln())/rate,
-                                            Err(_) => 0.0
-                                        }
-                                    })
-                                    .collect();
-                        },
-                        Err(_) => ()
-                    }
-
+                if let Ok(input_values) = read_values_from_file(filename) {
+                    time_values =input_values.iter()
+                        .map(|u| uniform_to_exp(u, &rate))
+                        .collect();
                 }
             }
 
-            GeneratorInput::Generated(num) => {
+            GeneratorInput::List(num) => {
                 let mut rng = rand::thread_rng();
                 let mut uniform_randoms: Vec<f64> = Vec::with_capacity(num);
                 for _ in 0..num {
                     uniform_randoms.push(rng.gen_range(0.0, 1.0));
                 }
-                time_values =
-                    uniform_randoms.iter()
-                        .map(|u| -((1.0 - u).ln())/rate)
-                        .collect();
+                time_values = uniform_randoms.iter()
+                    .map(|u| uniform_to_exp(u, &rate))
+                    .collect();
             }
         }
 
@@ -65,4 +52,24 @@ impl Generator {
         }
 
     }
+}
+
+fn read_values_from_file(filename: &str) -> Result<(Vec<f64>), Box<Error>> {
+    let mut f = File::open(filename)?;
+    let mut contents = String::new();
+    f.read_to_string(&mut contents)?;
+    let time_values = contents.lines()
+        .map(|u| {
+            match u.parse::<f64>() {
+                Ok(u) => u,
+                Err(_) => 0.0
+            }
+        })
+        .collect();
+
+    Ok((time_values))
+}
+
+fn uniform_to_exp(u: &f64, rate: &f64) -> f64 {
+    -((1.0 - u).ln())/rate
 }
