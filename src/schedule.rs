@@ -55,7 +55,8 @@ impl<T: SimulatedSystem> Schedule<T> {
             }
         }
 
-        println!("Simulation complete at time {:.2}", self.time_now);
+        println!("*******************************************************");
+        println!("Simulation results:");
         self.sim_system.print_stats();
     }
 }

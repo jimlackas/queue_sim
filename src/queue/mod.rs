@@ -85,11 +85,11 @@ impl SimulatedSystem for Queue {
     }
 
     fn print_stats(&self) {
-        println!("Average length of the queue = {:.2}",
+        println!("   Average length of the queue = {:.2}",
                  self.stats.get_avg_length());
-        println!("Percent time with 3 or more in the queue = {:.2}%",
+        println!("   Percent time with 3 or more in the queue = {:.2}%",
                  self.stats.get_perc_time_queue_length(3));
-        println!("Total server utilization = {:.2}",
+        println!("   Total server utilization = {:.2}",
                  self.stats.get_server_utilization());
     }
 }

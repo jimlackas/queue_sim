@@ -1,4 +1,5 @@
 extern crate rand;
+#[macro_use]
 extern crate clap;
 
 mod event;
@@ -8,7 +9,7 @@ mod config;
 
 use queue::Queue;
 use schedule::Schedule;
-use event::*;
+use event::{Event, ScheduledEvent};
 use config::Config;
 
 
