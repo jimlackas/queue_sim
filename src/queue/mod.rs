@@ -6,14 +6,6 @@ use schedule::SimulatedSystem;
 use self::statistics::*;
 use self::time_gen::*;
 
-const INTER_ARRIVAL_RATE: f64 = 1.0 / 0.9;
-const SERVICE_RATE: f64 = 1.0 / 0.7;
-
-#[allow(dead_code)]
-const INTER_ARRIVAL_INPUT_FILE: &str = "Data1.txt";
-#[allow(dead_code)]
-const SERVICE_INPUT_FILE: &str = "Data2.txt";
-
 pub struct Queue {
     length : u32,
     busy : bool,
@@ -24,31 +16,12 @@ pub struct Queue {
 
 impl Queue {
     #[allow(dead_code)]
-    pub fn new() -> Queue {
+    pub fn new(arrival_rate: f64, service_rate: f64) -> Queue {
         Queue {
             length: 0,
             busy: false,
-            arrival_times: Generator::new(
-                INTER_ARRIVAL_RATE,
-                GeneratorInput::File(INTER_ARRIVAL_INPUT_FILE)),
-            service_times: Generator::new(
-                SERVICE_RATE,
-                GeneratorInput::File(SERVICE_INPUT_FILE)),
-            stats: Stats::new(),
-        }
-    }
-
-    #[allow(dead_code)]
-    pub fn new_with_event_count(count: usize) -> Queue {
-        Queue {
-            length: 0,
-            busy: false,
-            arrival_times: Generator::new(
-                INTER_ARRIVAL_RATE,
-                GeneratorInput::List(count)),
-            service_times: Generator::new(
-                SERVICE_RATE,
-                GeneratorInput::List(count)),
+            arrival_times: Generator::new(arrival_rate),
+            service_times: Generator::new(service_rate),
             stats: Stats::new(),
         }
     }
@@ -58,12 +31,12 @@ impl Queue {
 
         if !self.busy {
             self.busy = true;
-            self.attempt_next_departure(&mut next_events, time_now);
+            self.generate_next_departure(&mut next_events, time_now);
 
         } else {
             self.length += 1;
         }
-        self.attempt_next_arrival(&mut next_events, time_now);
+        self.generate_next_arrival(&mut next_events, time_now);
 
         next_events
     }
@@ -73,7 +46,7 @@ impl Queue {
 
         if self.length > 0 {
             self.length -= 1;
-            self.attempt_next_departure(&mut next_events, time_now);
+            self.generate_next_departure(&mut next_events, time_now);
         } else {
             self.busy = false;
         }
@@ -81,16 +54,14 @@ impl Queue {
         next_events
     }
 
-    fn attempt_next_arrival(&mut self, event_list: &mut Vec<ScheduledEvent>, time_now: f64) {
-        if let Some(next_time) = self.arrival_times.get_next() {
-            event_list.push(ScheduledEvent::new(Event::Arrival, time_now + next_time));
-        }
+    fn generate_next_arrival(&mut self, event_list: &mut Vec<ScheduledEvent>, time_now: f64) {
+        event_list.push(
+            ScheduledEvent::new(Event::Arrival, time_now + self.arrival_times.get_next()));
     }
 
-    fn attempt_next_departure(&mut self, event_list: &mut Vec<ScheduledEvent>, time_now: f64) {
-        if let Some(next_time) = self.service_times.get_next() {
-            event_list.push(ScheduledEvent::new(Event::Departure, time_now + next_time));
-        }
+    fn generate_next_departure(&mut self, event_list: &mut Vec<ScheduledEvent>, time_now: f64) {
+        event_list.push(
+            ScheduledEvent::new(Event::Departure, time_now + self.service_times.get_next()));
     }
 }
 

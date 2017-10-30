@@ -5,3 +5,4 @@ authors = ["jim"]
 
 [dependencies]
 rand = "0.3"
+clap = "2.27"
