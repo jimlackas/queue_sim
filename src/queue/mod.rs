@@ -2,7 +2,7 @@ mod statistics;
 mod time_gen;
 
 use event::*;
-use schedule::SimulatedSystem;
+use system::SimulatedSystem;
 use self::statistics::*;
 use self::time_gen::*;
 
@@ -84,7 +84,9 @@ impl SimulatedSystem for Queue {
         next_events
     }
 
-    fn print_stats(&self) {
+    fn print_results(&self) {
+        println!("*******************************************************");
+        println!("Simulation results:");
         println!("   Average length of the queue = {:.2}",
                  self.stats.get_avg_length());
         println!("   Percent time with 3 or more in the queue = {:.2}%",

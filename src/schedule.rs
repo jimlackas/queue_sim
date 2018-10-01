@@ -1,9 +1,5 @@
 use event::*;
-
-pub trait SimulatedSystem {
-    fn handle_event(&mut self, event: &Event, time: f64) -> Vec<ScheduledEvent>;
-    fn print_stats(&self);
-}
+use system::SimulatedSystem;
 
 pub struct Schedule<T> {
     event_list : Vec<ScheduledEvent>,
@@ -55,8 +51,7 @@ impl<T: SimulatedSystem> Schedule<T> {
             }
         }
 
-        println!("*******************************************************");
-        println!("Simulation results:");
-        self.sim_system.print_stats();
+        println!("Simulation complete at time {:.2}", self.time_now);
+        self.sim_system.print_results();
     }
 }

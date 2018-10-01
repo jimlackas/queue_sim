@@ -6,6 +6,7 @@ mod event;
 mod queue;
 mod schedule;
 mod config;
+mod system;
 
 use queue::Queue;
 use schedule::Schedule;

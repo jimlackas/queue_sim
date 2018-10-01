@@ -34,7 +34,7 @@ impl Stats {
             }
 
             self.total_queue_time +=
-                prev_data_point.queue_len as f64 * (self.total_sim_time - prev_data_point.time)
+                prev_data_point.queue_len as f64 * (data_point.time - prev_data_point.time)
         }
 
         self.data_points.push(data_point);
