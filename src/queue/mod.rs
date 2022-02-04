@@ -7,11 +7,11 @@ use self::statistics::*;
 use self::time_gen::*;
 
 pub struct Queue {
-    length : u32,
-    busy : bool,
-    arrival_times : Generator,
-    service_times : Generator,
-    stats : Stats,
+    length: u32,
+    busy: bool,
+    arrival_times: Generator,
+    service_times: Generator,
+    stats: Stats,
 }
 
 impl Queue {
@@ -32,7 +32,6 @@ impl Queue {
         if !self.busy {
             self.busy = true;
             self.generate_next_departure(&mut next_events, time_now);
-
         } else {
             self.length += 1;
         }

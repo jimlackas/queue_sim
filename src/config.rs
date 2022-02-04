@@ -48,7 +48,7 @@ fn parse_arg_value(arg: Option<&str>, default: f64) -> f64 {
                 Ok(val) => val,
                 Err(_) => default,
             }
-        },
+        }
         None => default,
     }
 }

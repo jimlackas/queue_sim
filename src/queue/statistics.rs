@@ -59,7 +59,7 @@ impl Stats {
                             queue_time += next_point.time - curr_point.time;
                         }
                         curr_point = next_point;
-                    },
+                    }
                     None => break,
                 }
             }

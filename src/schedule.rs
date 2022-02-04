@@ -2,7 +2,7 @@ use event::*;
 use system::SimulatedSystem;
 
 pub struct Schedule<T> {
-    event_list : Vec<ScheduledEvent>,
+    event_list: Vec<ScheduledEvent>,
     time_now: f64,
     sim_system: T,
 }
@@ -26,7 +26,7 @@ impl<T: SimulatedSystem> Schedule<T> {
             }
 
             if self.event_list[index].time > event.time {
-                self.event_list.insert(index,event);
+                self.event_list.insert(index, event);
                 break;
             }
             index += 1;
